@@ -35,7 +35,7 @@ export default function HomePage() {
                     <div
                         key={index}
                         className="flex w-[32rem] h-56 bg-slate-400/25 border border-slate-300 rounded-md overflow-hidden cursor-pointer"
-                        onClick={() => {router.push(`/${article.title.replace(/\s+/g, '-')}`)}}
+                        onClick={() => {router.push(`/${article.title.toLowerCase().replace(/\s+/g, '-')}`)}}
                     >
                         <div className="w-40 min-w-40 h-full">
                             <img src={article.imageUrl} alt="Image" className="w-full h-full object-cover" />
