@@ -11,10 +11,10 @@ export async function GET(request: NextRequest) {
 
     const sortBy = searchParams.get("sortBy") ? searchParams.get("sortBy") : "publishedAt"
     const page = searchParams.get("page") ? parseInt(searchParams.get("page") as string) : 1
-    const items = searchParams.get("items") ? parseInt(searchParams.get("items") as string) : 10
+    const pageSize = searchParams.get("pageSize") ? parseInt(searchParams.get("pageSize") as string) : 10
     const language = searchParams.get("language") ? searchParams.get("language") : "pt"
 
-    if(!items || items < 1) {
+    if(!pageSize || pageSize < 1) {
         return NextResponse.json({
             status: StatusCode.BAD_REQUEST,
             message: "Query params is incorrect."
@@ -26,7 +26,7 @@ export async function GET(request: NextRequest) {
     const apiKey = process.env.NEWSAPI_KEY
 
     const response = await fetch(
-        `https://newsapi.org/v2/everything?q=a&sortBy=${sortBy}&pageSize=${items}&page=${page}&language=${language}&apiKey=${apiKey}`
+        `https://newsapi.org/v2/everything?q=a&sortBy=${sortBy}&pageSize=${pageSize}&page=${page}&language=${language}&apiKey=${apiKey}`
     )
 
     if(response.ok) {
@@ -34,7 +34,7 @@ export async function GET(request: NextRequest) {
 
         const filteredData = {
             results: data.totalResults,
-            maxPages: (data.totalResults / items) > 10 ? Math.floor(100 / items) : Math.floor(data.totalResults / items), // Esse "maxPages" é só para no front, eu ter uma ideia de quantas paginas irão ter
+            maxPages: (data.totalResults / pageSize) > 10 ? Math.floor(100 / pageSize) : Math.floor(data.totalResults / pageSize), // Esse "maxPages" é só para no front, eu ter uma ideia de quantas paginas irão ter
             articles: data.articles.map(article => ({
                 font: {
                     name: article.source.name,
